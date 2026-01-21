@@ -28,6 +28,26 @@ fn collatz(inputnum: u64) -> u64{
     return collatznum;	
 }
 
+fn collatz_verbose(inputnum: u64) -> u64{
+    let basenum:u64 = inputnum;
+	let mut interimnum:u64 = basenum;
+	let mut collatznum:u64 = 0;
+    loop{
+		collatznum += 1;
+        if interimnum %2 == 0{
+			interimnum = interimnum / 2;
+	    }
+		else{
+			interimnum = (3*interimnum) + 1;
+		}
+		if interimnum == 1{
+			break;
+		}
+		println!("Loop {} interimvalue: {}",collatznum,interimnum);
+    }
+    return collatznum;	
+}
+
 fn collatz_range(startrng: u64, endrng: u64) -> Vec<CollatzRes>{
 	let mut collatzvec:Vec<CollatzRes> = Vec::new();
 	println!("Got {} and {}",startrng,endrng);
@@ -38,14 +58,20 @@ fn collatz_range(startrng: u64, endrng: u64) -> Vec<CollatzRes>{
 	return collatzvec;
 }
 
-fn direct_collatz(){
+fn direct_collatz(verbose: bool){
 	let inputstr = input!("Please input the testnumber for collatz conjecture\n (or 'q' to quit)\n>");
 	if inputstr.to_uppercase() == "Q"{
 		return;
 	}
 	else{
 		let inputint: u64 = inputstr.parse::<u64>().expect("Your input could not be converted to a unsigned integer");
-		println!("This is the result:{} for input {}",collatz(inputint),inputstr);
+		if verbose{
+			let result = collatz_verbose(inputint);
+			println!("This is the result:{} for input {}",result,inputstr);
+		}
+		else{
+		    println!("This is the result:{} for input {}",collatz(inputint),inputstr);
+		}
 	}
 }
 
@@ -139,6 +165,7 @@ fn mainmenu() -> String{
 	let mainmenustr = "Mainmenu
 -----------
 D)Direct collatznumber
+V)Direct collatznumber with steps writen to console
 R)Collatznumber over range
 G)Collatz Game
 Q)Quit";
@@ -175,7 +202,11 @@ fn main() {
 			break;
 		}
 		else if inputstr.to_uppercase() == "D"{
-			direct_collatz();
+			direct_collatz(false);
+			anykey();
+		}
+		else if inputstr.to_uppercase() == "V"{
+			direct_collatz(true);
 			anykey();
 		}
 		else if inputstr.to_uppercase() == "R"{
